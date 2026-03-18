@@ -1,5 +1,1 @@
-import { invoke } from "@tauri-apps/api/core";
-
-invoke("launch_url").catch(() => {
-  document.querySelector(".spinner")?.classList.add("error");
-});
+// Entry point — available for custom loading screen logic

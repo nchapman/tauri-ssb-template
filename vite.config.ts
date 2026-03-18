@@ -1,8 +1,21 @@
 import { defineConfig } from "vite";
+import { readFileSync } from "fs";
+import { viteSingleFile } from "vite-plugin-singlefile";
 
 const host = process.env.TAURI_DEV_HOST;
+const tauriConf = JSON.parse(readFileSync("src-tauri/tauri.conf.json", "utf-8"));
+const ssbUrl = tauriConf?.plugins?.ssb?.url;
+if (!ssbUrl) {
+  throw new Error(
+    'Missing plugins.ssb.url in src-tauri/tauri.conf.json. ' +
+    'Add: { "plugins": { "ssb": { "url": "https://your-site.com/" } } }'
+  );
+}
+
+process.env.VITE_SSB_URL = ssbUrl;
 
 export default defineConfig({
+  plugins: [viteSingleFile()],
   clearScreen: false,
   server: {
     port: 1420,

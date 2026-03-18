@@ -18,57 +18,22 @@ struct SsbConfig {
     url: String,
 }
 
-struct SsbState {
-    url: Url,
-    host: String,
-}
-
-fn parse_ssb_config() -> SsbState {
+fn parse_ssb_host() -> String {
     let config: TauriConfig =
         serde_json::from_str(include_str!("../tauri.conf.json"))
             .expect("Failed to parse plugins.ssb in tauri.conf.json");
     let url = Url::parse(&config.plugins.ssb.url).expect("Invalid plugins.ssb.url");
-    let host = url.host_str().expect("plugins.ssb.url has no host").to_string();
-    SsbState { url, host }
-}
-
-/// Check if the target URL is reachable, then navigate the webview to it.
-#[tauri::command]
-async fn launch_url(
-    window: tauri::WebviewWindow,
-    state: tauri::State<'_, SsbState>,
-) -> Result<(), String> {
-    let client = reqwest::Client::builder()
-        .timeout(std::time::Duration::from_secs(10))
-        .build()
-        .map_err(|e| e.to_string())?;
-
-    let resp = client
-        .get(state.url.as_str())
-        .send()
-        .await
-        .map_err(|e| format!("Cannot reach {}: {e}", state.host))?;
-
-    if !resp.status().is_success() && !resp.status().is_redirection() {
-        return Err(format!("Server returned {}", resp.status()));
-    }
-
-    window
-        .navigate(state.url.clone())
-        .map_err(|e| format!("Navigation failed: {e}"))
+    url.host_str().expect("plugins.ssb.url has no host").to_string()
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    let ssb = parse_ssb_config();
-    let allowed_host = ssb.host.clone();
+    let allowed_host = parse_ssb_host();
 
     tauri::Builder::default()
         .plugin(tauri_plugin_window_state::Builder::new().build())
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_decorum::init())
-        .manage(ssb)
-        .invoke_handler(tauri::generate_handler![launch_url])
         .setup(move |app| {
             let config = app.config();
 
