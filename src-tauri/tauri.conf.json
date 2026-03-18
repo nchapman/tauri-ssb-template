@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "My SSB App",
+  "productName": "Duck.ai",
   "version": "0.1.0",
   "identifier": "com.your-domain.your-app",
   "build": {
