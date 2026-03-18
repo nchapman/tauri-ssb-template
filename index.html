@@ -3,20 +3,53 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Loading...</title>
+    <title>Loading</title>
     <style>
-      html, body {
-        margin: 0;
-        padding: 0;
-        background: #0a0a0a;
+      :root {
+        --bg: #1a1a2e;
+        --spinner: rgba(255, 255, 255, 0.25);
+        --spinner-active: rgba(255, 255, 255, 0.8);
       }
+
       @media (prefers-color-scheme: light) {
-        html, body { background: #fafafa; }
+        :root {
+          --bg: #ffffff;
+          --spinner: rgba(0, 0, 0, 0.12);
+          --spinner-active: rgba(0, 0, 0, 0.5);
+        }
       }
+
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+
+      body {
+        background: var(--bg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        -webkit-user-select: none;
+        user-select: none;
+      }
+
+      .spinner {
+        width: 24px;
+        height: 24px;
+        border: 2.5px solid var(--spinner);
+        border-top-color: var(--spinner-active);
+        border-radius: 50%;
+        animation: spin 0.75s linear infinite;
+      }
+
+      .spinner.error {
+        border-top-color: #e53e3e;
+        animation-duration: 3s;
+      }
+
+      @keyframes spin { to { transform: rotate(360deg); } }
     </style>
   </head>
   <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+    <div class="spinner"></div>
+    <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
