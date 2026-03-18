@@ -134,9 +134,9 @@ pub fn run() {
                 .on_navigation(move |url| {
                     let host = url.host_str().unwrap_or_default();
 
-                    // Allow iframes, blobs, and internal schemes
+                    // Allow internal schemes (tauri:// for local assets, about/blob for iframes)
                     let scheme = url.scheme();
-                    if scheme == "about" || scheme == "blob" {
+                    if scheme == "tauri" || scheme == "about" || scheme == "blob" {
                         return true;
                     }
 
