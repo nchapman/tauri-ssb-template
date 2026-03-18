@@ -1,41 +1,30 @@
-use serde::Deserialize;
 use tauri::{webview::NewWindowResponse, WebviewUrl, WebviewWindowBuilder};
 use tauri_plugin_decorum::WebviewWindowExt;
 use url::Url;
 
-#[derive(Deserialize)]
-struct TauriConfig {
-    plugins: PluginsConfig,
-}
-
-#[derive(Deserialize)]
-struct PluginsConfig {
-    ssb: SsbConfig,
-}
-
-#[derive(Deserialize)]
-struct SsbConfig {
-    url: String,
-}
-
-fn parse_ssb_host() -> String {
-    let config: TauriConfig =
-        serde_json::from_str(include_str!("../tauri.conf.json"))
-            .expect("Failed to parse plugins.ssb in tauri.conf.json");
-    let url = Url::parse(&config.plugins.ssb.url).expect("Invalid plugins.ssb.url");
-    url.host_str().expect("plugins.ssb.url has no host").to_string()
+fn ssb_host_from_config(config: &tauri::Config) -> String {
+    let url_str = config
+        .plugins
+        .0
+        .get("ssb")
+        .and_then(|v| v.get("url"))
+        .and_then(|v| v.as_str())
+        .expect("Missing plugins.ssb.url in tauri.conf.json");
+    let url = Url::parse(url_str).expect("plugins.ssb.url must be an absolute URL with a host");
+    url.host_str()
+        .expect("plugins.ssb.url must be an absolute URL with a host")
+        .to_string()
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    let allowed_host = parse_ssb_host();
-
     tauri::Builder::default()
         .plugin(tauri_plugin_window_state::Builder::new().build())
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_decorum::init())
         .setup(move |app| {
             let config = app.config();
+            let allowed_host = ssb_host_from_config(&config);
 
             let mut builder = WebviewWindowBuilder::new(
                 app,
@@ -97,13 +86,13 @@ pub fn run() {
                     NewWindowResponse::Deny
                 })
                 .on_navigation(move |url| {
-                    let host = url.host_str().unwrap_or_default();
-
                     // Allow internal schemes (tauri:// for local assets, about/blob for iframes)
                     let scheme = url.scheme();
                     if scheme == "tauri" || scheme == "about" || scheme == "blob" {
                         return true;
                     }
+
+                    let host = url.host_str().unwrap_or_default();
 
                     // Allow navigation to the SSB's own domain and local dev server
                     if host == allowed_host || host == "tauri.localhost" {

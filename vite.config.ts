@@ -1,9 +1,12 @@
 import { defineConfig } from "vite";
 import { readFileSync } from "fs";
+import { dirname, resolve } from "path";
+import { fileURLToPath } from "url";
 import { viteSingleFile } from "vite-plugin-singlefile";
 
+const __dirname = dirname(fileURLToPath(import.meta.url));
 const host = process.env.TAURI_DEV_HOST;
-const tauriConf = JSON.parse(readFileSync("src-tauri/tauri.conf.json", "utf-8"));
+const tauriConf = JSON.parse(readFileSync(resolve(__dirname, "src-tauri/tauri.conf.json"), "utf-8"));
 const ssbUrl = tauriConf?.plugins?.ssb?.url;
 if (!ssbUrl) {
   throw new Error(

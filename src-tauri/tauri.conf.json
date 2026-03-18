@@ -13,7 +13,35 @@
     "withGlobalTauri": false,
     "windows": [],
     "security": {
-      "csp": null
+      "csp": null,
+      "capabilities": [
+        {
+          "identifier": "default",
+          "description": "Capabilities for the local app (loading screen)",
+          "windows": ["main"],
+          "permissions": [
+            "core:default",
+            "window-state:default"
+          ]
+        },
+        {
+          "identifier": "remote",
+          "description": "Minimal capabilities granted to the remote SSB site",
+          "windows": ["main"],
+          "remote": {
+            "urls": ["https://duck.ai/*"]
+          },
+          "permissions": [
+            "core:window:allow-minimize",
+            "core:window:allow-maximize",
+            "core:window:allow-toggle-maximize",
+            "core:window:allow-close",
+            "core:window:allow-show",
+            "core:window:allow-start-dragging",
+            "decorum:allow-show-snap-overlay"
+          ]
+        }
+      ]
     }
   },
   "bundle": {
