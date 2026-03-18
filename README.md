@@ -50,7 +50,7 @@ All configuration lives in `src-tauri/tauri.conf.json`.
 - **Loading screen** — edit `index.html` to change the splash screen shown during redirect.
 - **Custom JS on load** — add logic to `src/main.ts` (runs before redirect).
 - **Initialization script** — the script injected into the remote page is in `src-tauri/src/lib.rs`. Modify it to add custom CSS, JS, or DOM manipulation on the target site.
-- **Entitlements** — `src-tauri/Entitlements.plist` has commented-out camera and microphone entitlements. Uncomment if your site needs them.
+- **Camera / Microphone** — both `src-tauri/Info.plist` (privacy descriptions) and `src-tauri/Entitlements.plist` (sandbox entitlements) have commented-out camera and microphone entries. Uncomment both if your site needs them.
 - **Window defaults** — size, min size, and titlebar style are configured in `lib.rs`.
 
 ## Building
