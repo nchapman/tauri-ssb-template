@@ -52,13 +52,13 @@ pub fn run() {
                     (function() {{
                         // Expose titlebar height as a CSS variable for sites to use
                         const style = document.createElement('style');
-                        style.textContent = `html.tauri-ssb {{ --ssb-titlebar-height: 32px; }}`;
+                        style.textContent = `html.tauri-ssb {{ --tauri-ssb-titlebar-height: 32px; }}`;
                         document.documentElement.appendChild(style);
 
                         // Fixed drag region overlay
                         const tb = document.createElement('div');
                         tb.setAttribute('data-tauri-drag-region', '');
-                        tb.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:var(--ssb-titlebar-height,32px);z-index:2147483647;-webkit-app-region:drag;pointer-events:auto;';
+                        tb.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:var(--tauri-ssb-titlebar-height,32px);z-index:2147483647;-webkit-app-region:drag;pointer-events:auto;';
                         document.documentElement.appendChild(tb);
                     }})();
 

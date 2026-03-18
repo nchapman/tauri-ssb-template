@@ -25,11 +25,11 @@ The app loads a local loading screen (`index.html`) that immediately redirects t
 - **Navigation guard** — only allows navigation to the configured host. External links open in the default browser.
 - **Window state persistence** — remembers size, position, and maximized state across launches.
 - **macOS titlebar overlay** — transparent overlay titlebar with traffic light inset. A draggable region is injected into the remote page via initialization script.
-- **CSS hook** — the remote page gets a `tauri-ssb` class on `<html>` and a `--ssb-titlebar-height` CSS variable. Use these to make room for the overlay titlebar:
+- **CSS hook** — the remote page gets a `tauri-ssb` class on `<html>` and a `--tauri-ssb-titlebar-height` CSS variable. Use these to make room for the overlay titlebar:
 
   ```css
   html.tauri-ssb body {
-    padding-top: var(--ssb-titlebar-height);
+    padding-top: var(--tauri-ssb-titlebar-height);
   }
   ```
 - **Capabilities** — minimal IPC permissions for the remote site (window controls only), defined inline in `tauri.conf.json`.
