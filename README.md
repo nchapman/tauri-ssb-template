@@ -60,3 +60,7 @@ pnpm tauri build
 ```
 
 Produces platform-specific installers in `src-tauri/target/release/bundle/`.
+
+### macOS code signing
+
+The template ships with `"signingIdentity": "-"` (ad-hoc signing) so builds can run on other Macs without an Apple Developer certificate. Recipients may need to right-click → Open on first launch to bypass Gatekeeper. Replace with your real signing identity if you have one.
