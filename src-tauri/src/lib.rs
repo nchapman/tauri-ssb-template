@@ -64,6 +64,7 @@ pub fn run() {
     let allowed_host = ssb.host.clone();
 
     tauri::Builder::default()
+        .plugin(tauri_plugin_window_state::Builder::new().build())
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_decorum::init())
         .manage(ssb)
@@ -78,8 +79,7 @@ pub fn run() {
             )
             .title(config.product_name.as_deref().unwrap_or("SSB"))
             .inner_size(1200.0, 800.0)
-            .min_inner_size(400.0, 300.0)
-            .center();
+            .min_inner_size(400.0, 300.0);
 
             #[cfg(target_os = "macos")]
             {

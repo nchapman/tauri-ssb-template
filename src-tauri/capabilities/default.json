@@ -3,6 +3,7 @@
   "description": "Capabilities for the local app (loading screen)",
   "windows": ["main"],
   "permissions": [
-    "core:default"
+    "core:default",
+    "window-state:default"
   ]
 }
